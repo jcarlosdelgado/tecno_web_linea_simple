@@ -1,0 +1,444 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ========================================
+   VARIABLES Y TEMAS BASE
+   ======================================== */
+
+:root {
+    --color-primary: 79 70 229;
+    --color-secondary: 107 114 128;
+    --color-accent: 59 130 246;
+    --border-radius: 0.5rem;
+}
+
+/* ========================================
+   MODO CLARO (Defecto)
+   ======================================== */
+.modo-claro,
+:root {
+    --bg-primary: 255 255 255;
+    --bg-secondary: 249 250 251;
+    --bg-card: 255 255 255;
+    --text-primary: 17 24 39;
+    --text-secondary: 107 114 128;
+    --border-color: 229 231 235;
+}
+
+/* ========================================
+   MODO OSCURO
+   ======================================== */
+.modo-oscuro {
+    --bg-primary: 17 24 39;
+    --bg-secondary: 31 41 55;
+    --bg-card: 31 41 55;
+    --text-primary: 243 244 246;
+    --text-secondary: 209 213 219;
+    --border-color: 75 85 99;
+    --color-primary: 129 140 248;
+}
+
+.modo-oscuro,
+.modo-oscuro * {
+    color-scheme: dark;
+}
+
+.modo-oscuro body,
+.modo-oscuro .min-h-screen {
+    background-color: rgb(17 24 39) !important;
+    color: rgb(243 244 246) !important;
+}
+
+/* Tablas en modo oscuro */
+.modo-oscuro table,
+.modo-oscuro .bg-white,
+.modo-oscuro .bg-gray-50,
+.modo-oscuro .bg-gray-100 {
+    background-color: rgb(31 41 55) !important;
+    color: rgb(243 244 246) !important;
+}
+
+.modo-oscuro thead,
+.modo-oscuro th {
+    background-color: rgb(17 24 39) !important;
+    color: rgb(209 213 219) !important;
+    border-color: rgb(75 85 99) !important;
+}
+
+.modo-oscuro td,
+.modo-oscuro tr {
+    border-color: rgb(75 85 99) !important;
+}
+
+/* Cards en modo oscuro */
+.modo-oscuro .shadow,
+.modo-oscuro .shadow-sm,
+.modo-oscuro .shadow-md,
+.modo-oscuro .shadow-lg {
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2) !important;
+}
+
+/* Inputs en modo oscuro */
+.modo-oscuro input,
+.modo-oscuro select,
+.modo-oscuro textarea {
+    background-color: rgb(31 41 55) !important;
+    color: rgb(243 244 246) !important;
+    border-color: rgb(75 85 99) !important;
+}
+
+.modo-oscuro input:focus,
+.modo-oscuro select:focus,
+.modo-oscuro textarea:focus {
+    border-color: rgb(129 140 248) !important;
+    box-shadow: 0 0 0 3px rgba(129, 140, 248, 0.1) !important;
+}
+
+/* Navegación en modo oscuro */
+.modo-oscuro nav {
+    background-color: rgb(31 41 55) !important;
+    border-color: rgb(75 85 99) !important;
+}
+
+/* Textos en modo oscuro */
+.modo-oscuro .text-gray-900,
+.modo-oscuro .text-gray-800,
+.modo-oscuro .text-gray-700 {
+    color: rgb(243 244 246) !important;
+}
+
+.modo-oscuro .text-gray-600,
+.modo-oscuro .text-gray-500 {
+    color: rgb(209 213 219) !important;
+}
+
+/* ========================================
+   MODO CREMA (Sepia/Cálido)
+   ======================================== */
+.modo-crema {
+    --bg-primary: 250 245 235;
+    --bg-secondary: 245 235 220;
+    --bg-card: 255 250 240;
+    --text-primary: 40 35 30;
+    --text-secondary: 100 90 80;
+    --border-color: 215 205 190;
+    --color-primary: 180 120 50;
+    --color-accent: 200 100 30;
+}
+
+.modo-crema body,
+.modo-crema .min-h-screen {
+    background-color: rgb(250 245 235) !important;
+    color: rgb(40 35 30) !important;
+}
+
+/* Tablas en modo crema */
+.modo-crema table,
+.modo-crema .bg-white {
+    background-color: rgb(255 250 240) !important;
+    color: rgb(40 35 30) !important;
+}
+
+.modo-crema .bg-gray-50,
+.modo-crema .bg-gray-100,
+.modo-crema thead {
+    background-color: rgb(245 235 220) !important;
+    color: rgb(60 50 40) !important;
+}
+
+.modo-crema td,
+.modo-crema th,
+.modo-crema tr {
+    border-color: rgb(215 205 190) !important;
+}
+
+/* Cards en modo crema */
+.modo-crema .shadow,
+.modo-crema .shadow-sm,
+.modo-crema .shadow-md,
+.modo-crema .shadow-lg {
+    box-shadow: 0 4px 6px -1px rgba(100, 80, 60, 0.15), 0 2px 4px -1px rgba(100, 80, 60, 0.1) !important;
+}
+
+/* Navegación en modo crema */
+.modo-crema nav {
+    background-color: rgb(255 250 240) !important;
+    border-color: rgb(215 205 190) !important;
+}
+
+/* ========================================
+   TEMA NIÑOS (Divertido y colorido)
+   ======================================== */
+.tema-ninos {
+    --color-primary: 236 72 153; /* pink-500 */
+    --color-secondary: 251 146 60; /* orange-400 */
+    --color-accent: 34 197 94; /* green-500 */
+    --border-radius: 1.25rem;
+}
+
+.tema-ninos button,
+.tema-ninos .btn,
+.tema-ninos a.bg-indigo-600 {
+    border-radius: 1.25rem !important;
+    box-shadow: 0 4px 12px rgba(236, 72, 153, 0.3);
+    transform: scale(1);
+    transition: transform 0.2s ease;
+}
+
+.tema-ninos button:hover,
+.tema-ninos .btn:hover {
+    transform: scale(1.05) rotate(-1deg);
+}
+
+.tema-ninos .card,
+.tema-ninos .bg-white.shadow {
+    border-radius: 1.25rem !important;
+    border: 3px solid rgb(236 72 153 / 0.2) !important;
+}
+
+/* ========================================
+   TEMA JÓVENES (Moderno y vibrante)
+   ======================================== */
+.tema-jovenes {
+    --color-primary: 139 92 246; /* violet-500 */
+    --color-secondary: 236 72 153; /* pink-500 */
+    --color-accent: 6 182 212; /* cyan-500 */
+    --border-radius: 0.75rem;
+}
+
+.tema-jovenes {
+    background: linear-gradient(135deg, rgba(139, 92, 246, 0.03) 0%, rgba(236, 72, 153, 0.03) 100%);
+}
+
+.tema-jovenes button,
+.tema-jovenes .btn {
+    background: linear-gradient(135deg, rgb(139 92 246) 0%, rgb(168 85 247) 100%) !important;
+    box-shadow: 0 4px 15px rgba(139, 92, 246, 0.4);
+    border: none !important;
+}
+
+.tema-jovenes .card,
+.tema-jovenes .bg-white.shadow {
+    box-shadow: 0 8px 25px rgba(139, 92, 246, 0.15) !important;
+    border: 1px solid rgba(139, 92, 246, 0.2) !important;
+}
+
+.tema-jovenes input:focus,
+.tema-jovenes select:focus,
+.tema-jovenes textarea:focus {
+    border-color: rgb(139 92 246) !important;
+    box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.2) !important;
+}
+
+/* ========================================
+   TEMA ADULTOS (Profesional y elegante)
+   ======================================== */
+.tema-adultos {
+    --color-primary: 79 70 229; /* indigo-600 */
+    --color-secondary: 107 114 128; /* gray-500 */
+    --color-accent: 59 130 246; /* blue-500 */
+    --border-radius: 0.5rem;
+}
+
+.tema-adultos button,
+.tema-adultos .btn {
+    box-shadow: 0 2px 8px rgba(79, 70, 229, 0.25);
+}
+
+.tema-adultos .card,
+.tema-adultos .bg-white.shadow {
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08) !important;
+}
+
+/* ========================================
+   CONTRASTE ALTO (Accesibilidad máxima)
+   ======================================== */
+.contraste-alto {
+    --text-primary: 0 0 0 !important;
+    --bg-primary: 255 255 255 !important;
+    --bg-card: 255 255 255 !important;
+    --border-color: 0 0 0 !important;
+}
+
+.contraste-alto * {
+    font-weight: 600 !important;
+}
+
+.contraste-alto button,
+.contraste-alto .btn {
+    background-color: rgb(0 0 0) !important;
+    color: rgb(255 255 255) !important;
+    border: 3px solid rgb(0 0 0) !important;
+}
+
+.contraste-alto input,
+.contraste-alto select,
+.contraste-alto textarea {
+    border: 3px solid rgb(0 0 0) !important;
+    background-color: rgb(255 255 255) !important;
+}
+
+.contraste-alto .card,
+.contraste-alto .bg-white.shadow {
+    border: 3px solid rgb(0 0 0) !important;
+    background-color: rgb(255 255 255) !important;
+}
+
+/* Modo oscuro con contraste alto */
+.modo-oscuro.contraste-alto {
+    --text-primary: 255 255 255 !important;
+    --bg-primary: 0 0 0 !important;
+    --bg-card: 0 0 0 !important;
+    --border-color: 255 255 255 !important;
+}
+
+.modo-oscuro.contraste-alto * {
+    color: rgb(255 255 255) !important;
+}
+
+.modo-oscuro.contraste-alto button,
+.modo-oscuro.contraste-alto .btn {
+    background-color: rgb(255 255 255) !important;
+    color: rgb(0 0 0) !important;
+    border: 3px solid rgb(255 255 255) !important;
+}
+
+.modo-oscuro.contraste-alto input,
+.modo-oscuro.contraste-alto select,
+.modo-oscuro.contraste-alto textarea {
+    border: 3px solid rgb(255 255 255) !important;
+    background-color: rgb(0 0 0) !important;
+    color: rgb(255 255 255) !important;
+}
+
+.modo-oscuro.contraste-alto .bg-white,
+.modo-oscuro.contraste-alto table,
+.modo-oscuro.contraste-alto .card {
+    background-color: rgb(0 0 0) !important;
+    border: 3px solid rgb(255 255 255) !important;
+}
+
+/* ========================================
+   TAMAÑOS DE FUENTE
+   ======================================== */
+.tamano-pequeno {
+    font-size: 14px;
+}
+
+.tamano-normal {
+    font-size: 16px;
+}
+
+.tamano-grande {
+    font-size: 18px;
+}
+
+/* ========================================
+   APLICACIÓN DE VARIABLES
+   ======================================== */
+
+body {
+    background-color: rgb(var(--bg-primary));
+    color: rgb(var(--text-primary));
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* ========================================
+   COMPONENTES GLOBALES MEJORADOS
+   ======================================== */
+
+/* Cards elegantes */
+.card,
+.bg-white.shadow,
+.bg-white.rounded {
+    background-color: rgb(var(--bg-card)) !important;
+    border: 1px solid rgb(var(--border-color));
+    border-radius: var(--border-radius);
+    transition: all 0.3s ease;
+}
+
+/* Botones con tema */
+.btn,
+button.bg-indigo-600,
+button.bg-blue-600 {
+    background-color: rgb(var(--color-primary)) !important;
+    color: white !important;
+    border-radius: var(--border-radius);
+    font-weight: 600;
+    transition: all 0.2s ease;
+}
+
+/* Inputs con tema */
+.input,
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="number"],
+input[type="date"],
+select,
+textarea {
+    background-color: rgb(var(--bg-card));
+    border: 1px solid rgb(var(--border-color)) !important;
+    color: rgb(var(--text-primary)) !important;
+    border-radius: var(--border-radius);
+    transition: all 0.2s ease;
+}
+
+/* Navegación */
+nav {
+    background-color: rgb(var(--bg-card)) !important;
+    border-bottom: 1px solid rgb(var(--border-color)) !important;
+}
+
+/* Tablas mejoradas */
+table {
+    border-color: rgb(var(--border-color)) !important;
+}
+
+thead {
+    background-color: rgb(var(--bg-secondary)) !important;
+}
+
+th, td {
+    border-color: rgb(var(--border-color)) !important;
+    color: rgb(var(--text-primary)) !important;
+}
+
+/* ========================================
+   SCROLLBAR
+   ======================================== */
+
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: rgb(var(--bg-secondary));
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgb(var(--color-primary));
+    border-radius: 4px;
+}
+
+/* ========================================
+   UTILIDADES
+   ======================================== */
+
+.text-primary {
+    color: rgb(var(--text-primary));
+}
+
+.text-secondary {
+    color: rgb(var(--text-secondary));
+}
+
+.bg-primary {
+    background-color: rgb(var(--bg-primary));
+}
+
+.bg-secondary {
+    background-color: rgb(var(--bg-secondary));
+}

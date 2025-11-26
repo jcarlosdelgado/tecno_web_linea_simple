@@ -1,0 +1,344 @@
+<script setup>
+import { ref } from 'vue';
+import ApplicationLogo from '@/Components/ApplicationLogo.vue';
+import Dropdown from '@/Components/Dropdown.vue';
+import DropdownLink from '@/Components/DropdownLink.vue';
+import NavLink from '@/Components/NavLink.vue';
+import ResponsiveNavLink from '@/Components/ResponsiveNavLink.vue';
+import Toast from '@/Components/UI/Toast.vue';
+import ThemeSelector from '@/Components/ThemeSelector.vue';
+import Footer from '@/Components/Footer.vue';
+import { Link, usePage } from '@inertiajs/vue3';
+import { useTheme } from '@/Composables/useTheme';
+
+const showingNavigationDropdown = ref(false);
+const page = usePage();
+
+const isOwner = page.props.auth.user?.rol === 'PROPIETARIO';
+const isClient = page.props.auth.user?.rol === 'CLIENTE';
+
+// Inicializar sistema de temas
+useTheme();
+</script>
+
+<template>
+    <div>
+        <Toast />
+        <div class="min-h-screen" style="background-color: rgb(var(--bg-primary)); color: rgb(var(--text-primary));">
+            <nav class="border-b" style="background-color: rgb(var(--bg-card)); border-color: rgb(var(--border-color));">
+                <!-- Primary Navigation Menu -->
+                <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+                    <div class="flex h-16 justify-between">
+                        <div class="flex">
+                            <!-- Logo -->
+                            <div class="flex shrink-0 items-center">
+                                <Link :href="isOwner ? route('admin.dashboard') : route('dashboard')">
+                                    <ApplicationLogo
+                                        class="block h-9 w-auto fill-current text-gray-800"
+                                    />
+                                </Link>
+                            </div>
+
+                            <!-- Navigation Links -->
+                            <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                                <NavLink
+                                    v-if="isClient"
+                                    :href="route('dashboard')"
+                                    :active="route().current('dashboard')"
+                                >
+                                    Dashboard
+                                </NavLink>
+                                
+                                <NavLink
+                                    v-if="isClient"
+                                    :href="route('pagos.historial')"
+                                    :active="route().current('pagos.historial')"
+                                >
+                                    Mis Pagos
+                                </NavLink>
+                                
+                                <NavLink
+                                    v-if="!isOwner"
+                                    :href="route('servicios.index')"
+                                    :active="route().current('servicios.*')"
+                                >
+                                    Servicios
+                                </NavLink>
+
+                                <NavLink
+                                    v-if="isOwner"
+                                    :href="route('admin.dashboard')"
+                                    :active="route().current('admin.dashboard')"
+                                >
+                                    Dashboard
+                                </NavLink>
+                                
+                                <NavLink
+                                    v-if="isOwner"
+                                    :href="route('admin.materiales.index')"
+                                    :active="route().current('admin.materiales.*')"
+                                >
+                                    Inventario
+                                </NavLink>
+                                
+                                <NavLink
+                                    v-if="isOwner"
+                                    :href="route('admin.servicios.index')"
+                                    :active="route().current('admin.servicios.*')"
+                                >
+                                    Servicios
+                                </NavLink>
+                                
+                                <NavLink
+                                    v-if="isOwner"
+                                    :href="route('admin.reportes.dashboard')"
+                                    :active="route().current('admin.reportes.*')"
+                                >
+                                    Reportes
+                                </NavLink>
+                                
+                                <NavLink
+                                    v-if="isOwner"
+                                    :href="route('admin.pagos.index')"
+                                    :active="route().current('admin.pagos.*') || route().current('admin.clientes.pagos')"
+                                >
+                                    Pagos
+                                </NavLink>
+                                
+                                <NavLink
+                                    v-if="isOwner"
+                                    :href="route('admin.gastos-operativos.index')"
+                                    :active="route().current('admin.gastos-operativos.*')"
+                                >
+                                    Gastos Operativos
+                                </NavLink>
+                                
+                                <NavLink
+                                    v-if="isOwner"
+                                    :href="route('admin.usuarios.index')"
+                                    :active="route().current('admin.usuarios.*')"
+                                >
+                                    Usuarios
+                                </NavLink>
+                                
+                                <NavLink
+                                    v-if="isOwner"
+                                    :href="route('admin.proveedores.index')"
+                                    :active="route().current('admin.proveedores.*')"
+                                >
+                                    Proveedores
+                                </NavLink>
+                            </div>
+                        </div>
+
+                        <div class="hidden sm:ms-6 sm:flex sm:items-center gap-3">
+                            <!-- Theme Selector -->
+                            <ThemeSelector />
+                            
+                            <!-- Settings Dropdown -->
+                            <div class="relative ms-3">
+                                <Dropdown align="right" width="48">
+                                    <template #trigger>
+                                        <span class="inline-flex rounded-md">
+                                            <button
+                                                type="button"
+                                                class="inline-flex items-center rounded-md border border-transparent bg-white px-3 py-2 text-sm font-medium leading-4 text-gray-500 transition duration-150 ease-in-out hover:text-gray-700 focus:outline-none"
+                                            >
+                                                {{ $page.props.auth.user?.name }}
+
+                                                <svg
+                                                    class="-me-0.5 ms-2 h-4 w-4"
+                                                    xmlns="http://www.w3.org/2000/svg"
+                                                    viewBox="0 0 20 20"
+                                                    fill="currentColor"
+                                                >
+                                                    <path
+                                                        fill-rule="evenodd"
+                                                        d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                                                        clip-rule="evenodd"
+                                                    />
+                                                </svg>
+                                            </button>
+                                        </span>
+                                    </template>
+
+                                    <template #content>
+                                        <DropdownLink :href="route('profile.edit')">
+                                            Perfil
+                                        </DropdownLink>
+                                        <DropdownLink
+                                            :href="route('logout')"
+                                            method="post"
+                                            as="button"
+                                        >
+                                            Cerrar Sesión
+                                        </DropdownLink>
+                                    </template>
+                                </Dropdown>
+                            </div>
+                        </div>
+
+                        <!-- Hamburger -->
+                        <div class="-me-2 flex items-center sm:hidden">
+                            <button
+                                @click="showingNavigationDropdown = !showingNavigationDropdown"
+                                class="inline-flex items-center justify-center rounded-md p-2 text-gray-400 transition duration-150 ease-in-out hover:bg-gray-100 hover:text-gray-500 focus:bg-gray-100 focus:text-gray-500 focus:outline-none"
+                            >
+                                <svg
+                                    class="h-6 w-6"
+                                    stroke="currentColor"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                >
+                                    <path
+                                        :class="{
+                                            hidden: showingNavigationDropdown,
+                                            'inline-flex': !showingNavigationDropdown,
+                                        }"
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        stroke-width="2"
+                                        d="M4 6h16M4 12h16M4 18h16"
+                                    />
+                                    <path
+                                        :class="{
+                                            hidden: !showingNavigationDropdown,
+                                            'inline-flex': showingNavigationDropdown,
+                                        }"
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        stroke-width="2"
+                                        d="M6 18L18 6M6 6l12 12"
+                                    />
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Responsive Navigation Menu -->
+                <div
+                    :class="{
+                        block: showingNavigationDropdown,
+                        hidden: !showingNavigationDropdown,
+                    }"
+                    class="sm:hidden"
+                >
+                    <div class="space-y-1 pb-3 pt-2">
+                        <ResponsiveNavLink
+                            v-if="isClient"
+                            :href="route('dashboard')"
+                            :active="route().current('dashboard')"
+                        >
+                            Dashboard
+                        </ResponsiveNavLink>
+                        
+                        <ResponsiveNavLink
+                            v-if="isClient"
+                            :href="route('pagos.historial')"
+                            :active="route().current('pagos.historial')"
+                        >
+                            Mis Pagos
+                        </ResponsiveNavLink>
+                        
+                        <ResponsiveNavLink
+                            v-if="isClient"
+                            :href="route('trabajos.create')"
+                            :active="route().current('trabajos.create')"
+                        >
+                            Solicitar Trabajo
+                        </ResponsiveNavLink>
+
+                        <ResponsiveNavLink
+                            v-if="isOwner"
+                            :href="route('admin.dashboard')"
+                            :active="route().current('admin.dashboard')"
+                        >
+                            Dashboard
+                        </ResponsiveNavLink>
+                        
+                        <ResponsiveNavLink
+                            v-if="isOwner"
+                            :href="route('admin.materiales.index')"
+                            :active="route().current('admin.materiales.*')"
+                        >
+                            Inventario
+                        </ResponsiveNavLink>
+                        
+                        <ResponsiveNavLink
+                            v-if="isOwner"
+                            :href="route('admin.pagos.index')"
+                            :active="route().current('admin.pagos.*') || route().current('admin.clientes.pagos')"
+                        >
+                            Pagos
+                        </ResponsiveNavLink>
+                        
+                        <ResponsiveNavLink
+                            v-if="isOwner"
+                            :href="route('admin.gastos-operativos.index')"
+                            :active="route().current('admin.gastos-operativos.*')"
+                        >
+                            Gastos Operativos
+                        </ResponsiveNavLink>
+                        
+                        <ResponsiveNavLink
+                            v-if="isOwner"
+                            :href="route('admin.usuarios.index')"
+                            :active="route().current('admin.usuarios.*')"
+                        >
+                            Usuarios
+                        </ResponsiveNavLink>
+                        
+                        <ResponsiveNavLink
+                            v-if="isOwner"
+                            :href="route('admin.proveedores.index')"
+                            :active="route().current('admin.proveedores.*')"
+                        >
+                            Proveedores
+                        </ResponsiveNavLink>
+                    </div>
+
+                    <!-- Responsive Settings Options -->
+                    <div class="border-t border-gray-200 pb-1 pt-4">
+                        <div class="px-4">
+                            <div class="text-base font-medium text-gray-800">
+                                {{ $page.props.auth.user?.name }}
+                            </div>
+                            <div class="text-sm font-medium text-gray-500">
+                                {{ $page.props.auth.user?.email }}
+                            </div>
+                        </div>
+
+                        <div class="mt-3 space-y-1">
+                            <ResponsiveNavLink :href="route('profile.edit')">
+                                Perfil
+                            </ResponsiveNavLink>
+                            <ResponsiveNavLink
+                                :href="route('logout')"
+                                method="post"
+                                as="button"
+                            >
+                                Cerrar Sesión
+                            </ResponsiveNavLink>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+
+            <!-- Page Heading -->
+            <header class="bg-white shadow" v-if="$slots.header">
+                <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+                    <slot name="header" />
+                </div>
+            </header>
+
+            <!-- Page Content -->
+            <main>
+                <slot />
+            </main>
+            
+            <!-- Footer with visit counter -->
+            <Footer />
+        </div>
+    </div>
+</template>
