@@ -346,71 +346,185 @@ class PaymentController extends Controller
 
     /**
      * Maneja el callback de Pago Fácil
+     * Estructura esperada: {"PedidoID": "...", "Fecha": "...", "Hora": "...", "MetodoPago": "...", "Estado": "..."}
      */
     public function handleCallback(Request $request)
     {
         try {
-            \Log::info('Pago Fácil Callback Received', ['data' => $request->all()]);
+            \Log::info('=== PAGOFACIL CALLBACK RECIBIDO ===', [
+                'PedidoID' => $request->input('PedidoID'),
+                'Estado' => $request->input('Estado'),
+                'Fecha' => $request->input('Fecha'),
+                'Hora' => $request->input('Hora'),
+                'MetodoPago' => $request->input('MetodoPago'),
+                'all_data' => $request->all(),
+                'headers' => $request->headers->all(),
+                'ip' => $request->ip(),
+            ]);
 
             $pedidoId = $request->input('PedidoID');
             $estado = $request->input('Estado');
             
+            // Responder siempre con 200 OK según documentación
             if (!$pedidoId) {
-                return response()->json(['error' => 0, 'status' => 1, 'message' => 'Callback recibido', 'values' => true], 200);
+                \Log::warning('Callback sin PedidoID');
+                return response()->json([
+                    'error' => 0, 
+                    'status' => 1, 
+                    'message' => 'Callback recibido sin PedidoID', 
+                    'values' => true
+                ], 200);
             }
 
+            // Buscar el pago por transaction_id (que es nuestro PedidoID)
             $pagoPasarela = PagoPasarela::where('transaction_id', $pedidoId)
                 ->orWhere('pf_transaction_id', $pedidoId)
                 ->orWhere('payment_method_transaction_id', $pedidoId)
                 ->first();
 
             if (!$pagoPasarela) {
-                \Log::warning('Pago no encontrado', ['pedido_id' => $pedidoId]);
-                return response()->json(['error' => 0, 'status' => 1, 'message' => 'Pago no encontrado', 'values' => true], 200);
+                \Log::warning('Pago no encontrado en BD', [
+                    'pedido_id' => $pedidoId,
+                    'intentando_buscar' => [
+                        'transaction_id' => $pedidoId,
+                        'pf_transaction_id' => $pedidoId,
+                        'payment_method_transaction_id' => $pedidoId,
+                    ]
+                ]);
+                return response()->json([
+                    'error' => 0, 
+                    'status' => 1, 
+                    'message' => 'Pago no encontrado', 
+                    'values' => true
+                ], 200);
             }
+
+            \Log::info('Pago encontrado', [
+                'pago_pasarela_id' => $pagoPasarela->id,
+                'pago_id' => $pagoPasarela->id_pago,
+                'estado_actual' => $pagoPasarela->estado
+            ]);
 
             $pago = $pagoPasarela->pago;
 
-            if (strtolower($estado) === 'completado' || strtolower($estado) === 'pagado') {
+            // Verificar si el estado indica pago completado
+            // PagoFácil puede enviar Estado como número (2 = Pagado) o texto ("completado", "pagado", "aprobado")
+            $estadoCompletado = false;
+            if (is_numeric($estado)) {
+                // Estado numérico: 2 = Pagado/Completado
+                $estadoCompletado = (int)$estado === 2;
+                \Log::info('Estado recibido como número', ['estado' => $estado, 'es_completado' => $estadoCompletado]);
+            } else {
+                // Estado de texto
+                $estadoCompletado = in_array(strtolower($estado), ['completado', 'pagado', 'aprobado']);
+                \Log::info('Estado recibido como texto', ['estado' => $estado, 'es_completado' => $estadoCompletado]);
+            }
+            
+            if ($estadoCompletado) {
+                \Log::info('✅ Procesando pago como COMPLETADO');
                 
+                // Si es una cuota
                 if ($pagoPasarela->cuota_id) {
                     $cuota = CuotaPago::find($pagoPasarela->cuota_id);
                     if ($cuota) {
-                        $cuota->update(['estado' => 'PAGADA', 'fecha_pago' => now()]);
+                        $cuota->update([
+                            'estado' => 'PAGADA', 
+                            'fecha_pago' => now()
+                        ]);
+                        \Log::info('Cuota marcada como PAGADA', ['cuota_id' => $cuota->id]);
                         
+                        // Verificar si todas las cuotas están pagadas
                         $todasPagadas = $pago->cuotas()->where('estado', '!=', 'PAGADA')->count() === 0;
                         if ($todasPagadas) {
-                            $pago->update(['estado' => 'PAGADO', 'fecha' => now()]);
+                            $pago->update([
+                                'estado' => 'PAGADO', 
+                                'fecha' => now()
+                            ]);
+                            \Log::info('Todas las cuotas pagadas, pago completado');
                         }
                     }
                 } else {
-                    $pago->update(['estado' => 'PAGADO', 'fecha' => now()]);
+                    // Pago único
+                    $pago->update([
+                        'estado' => 'PAGADO', 
+                        'fecha' => now()
+                    ]);
+                    \Log::info('Pago único marcado como PAGADO', ['pago_id' => $pago->id_pago]);
                 }
 
-                $pagoPasarela->update(['estado' => 'COMPLETADO', 'pf_status' => 2, 'respuesta_json' => json_encode($request->all())]);
+                // Actualizar estado de PagoPasarela
+                $pagoPasarela->update([
+                    'estado' => 'COMPLETADO', 
+                    'pf_status' => 2, 
+                    'respuesta_json' => json_encode($request->all())
+                ]);
                 
+                // Iniciar producción del trabajo
                 $trabajo = $pago->trabajo;
-                if ($trabajo && $trabajo->estado !== 'EN_PRODUCCION' && $trabajo->estado !== 'FINALIZADO') {
+                if ($trabajo && !in_array($trabajo->estado, ['EN_PRODUCCION', 'FINALIZADO'])) {
+                    \Log::info('Iniciando producción del trabajo', ['trabajo_id' => $trabajo->id_trabajo]);
+                    
                     $inventoryService = new \App\Services\InventoryService();
                     $presupuestoAprobado = $trabajo->presupuestos()->where('estado', 'APROBADO')->first();
                     
                     if ($presupuestoAprobado) {
                         try {
                             $inventoryService->consumeMaterials($presupuestoAprobado->id_presupuesto);
+                            \Log::info('Materiales consumidos del inventario');
                         } catch (\Exception $e) {
-                            \Log::error('Error consumiendo materiales', ['error' => $e->getMessage()]);
+                            \Log::error('Error consumiendo materiales', [
+                                'error' => $e->getMessage(),
+                                'presupuesto_id' => $presupuestoAprobado->id_presupuesto
+                            ]);
                         }
                     }
                     
-                    $trabajo->update(['estado' => 'EN_PRODUCCION', 'fecha_inicio' => now()]);
+                    $trabajo->update([
+                        'estado' => 'EN_PRODUCCION', 
+                        'fecha_inicio' => now()
+                    ]);
+                    \Log::info('Trabajo actualizado a EN_PRODUCCION');
                 }
+                
+                \Log::info('=== ✅ PAGO COMPLETADO EXITOSAMENTE ===', [
+                    'pago_id' => $pago->id_pago,
+                    'tipo' => $pagoPasarela->cuota_id ? 'CUOTA' : 'CONTADO',
+                    'cuota_id' => $pagoPasarela->cuota_id,
+                    'monto' => $pago->monto,
+                    'estado_trabajo' => $trabajo->estado ?? null
+                ]);
+            } else {
+                \Log::warning('❌ Estado no indica completado', [
+                    'estado_recibido' => $estado,
+                    'tipo_estado' => is_numeric($estado) ? 'numerico' : 'texto'
+                ]);
             }
 
-            return response()->json(['error' => 0, 'status' => 1, 'message' => 'Pago procesado correctamente', 'values' => true], 200);
+            \Log::info('=== CALLBACK PROCESADO EXITOSAMENTE ===');
+            
+            // Respuesta requerida por PagoFácil
+            return response()->json([
+                'error' => 0, 
+                'status' => 1, 
+                'message' => 'Pago procesado correctamente', 
+                'values' => true
+            ], 200);
 
         } catch (\Exception $e) {
-            \Log::error('Error procesando callback', ['error' => $e->getMessage()]);
-            return response()->json(['error' => 0, 'status' => 1, 'message' => 'Callback recibido', 'values' => true], 200);
+            \Log::error('=== ERROR EN CALLBACK PAGOFACIL ===', [
+                'error' => $e->getMessage(),
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            
+            // Siempre responder 200 OK para que PagoFácil no reintente
+            return response()->json([
+                'error' => 0, 
+                'status' => 1, 
+                'message' => 'Callback recibido con error: ' . $e->getMessage(), 
+                'values' => true
+            ], 200);
         }
     }
 

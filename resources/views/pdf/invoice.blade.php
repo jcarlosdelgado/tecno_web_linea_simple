@@ -96,6 +96,17 @@
             text-align: center;
         }
         
+        .watermark {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-45deg);
+            font-size: 80px;
+            color: rgba(16, 185, 129, 0.05);
+            font-weight: bold;
+            z-index: -1;
+        }
+        
         .payment-row {
             display: flex;
             justify-content: space-between;
@@ -224,8 +235,10 @@
     </style>
 </head>
 <body>
+    <div class="watermark">LINEA SIMPLE</div>
+    
     <div class="header">
-        <h1>TecnoWeb</h1>
+        <h1>Línea Simple</h1>
         <p class="subtitle">COMPROBANTE DE PAGO</p>
         <p>Nº {{ str_pad($pago->id_pago, 8, '0', STR_PAD_LEFT) }}</p>
     </div>
@@ -373,10 +386,10 @@
     </div>
 
     <div class="footer">
-        <p>TecnoWeb - Sistema de Gestión de Trabajos</p>
+        <p>Línea Simple - Sistema de Gestión de Trabajos</p>
         <p>Comprobante generado el {{ now()->format('d/m/Y H:i') }}</p>
         <p>Este documento tiene validez legal como comprobante de pago</p>
-        <p style="margin-top: 10px;">Para consultas: admin@tecnoweb.com</p>
+        <p style="margin-top: 10px;">Para consultas: contacto@lineasimple.com</p>
     </div>
 </body>
 </html>

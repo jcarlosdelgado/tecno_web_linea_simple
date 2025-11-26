@@ -172,12 +172,12 @@
     </style>
 </head>
 <body>
-    <div class="watermark">PAGADO</div>
+    <div class="watermark">LINEA SIMPLE</div>
     <div class="paid-stamp">✓ PAGADO</div>
 
     <div class="header">
         <h1>COMPROBANTE DE CUOTA</h1>
-        <div class="subtitle">TecnoWEB 2025 - Sistema de Gestión de Trabajos</div>
+        <div class="subtitle">Línea Simple - Sistema de Gestión de Trabajos</div>
     </div>
 
     <!-- Badge de Cuota -->
@@ -299,13 +299,13 @@
         </div>
         <div class="signature-box">
             <div class="signature-line">Firma Autorizada</div>
-            <div>TecnoWEB 2025</div>
+            <div>Línea Simple</div>
         </div>
     </div>
 
     <!-- Footer -->
     <div class="footer">
-        <p><strong>TecnoWEB 2025</strong> - Sistema de Gestión de Trabajos de Construcción</p>
+        <p><strong>Línea Simple</strong> - Sistema de Gestión de Trabajos de Construcción</p>
         <p>Este comprobante certifica el pago de la cuota {{ $cuota->numero_cuota }} de {{ $pago->numero_cuotas }}</p>
         <p>Comprobante generado electrónicamente el {{ now()->format('d/m/Y \a \l\a\s H:i') }}</p>
         <p>Para cualquier consulta, contáctenos a través de nuestros canales oficiales.</p>

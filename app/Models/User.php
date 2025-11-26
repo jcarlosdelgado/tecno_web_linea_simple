@@ -70,7 +70,6 @@ class User extends Authenticatable
     // Role constants
     const ROL_PROPIETARIO = 'PROPIETARIO';
     const ROL_CLIENTE = 'CLIENTE';
-    const ROL_EMPLEADO = 'EMPLEADO';
 
     public function isPropietario(): bool
     {
@@ -82,9 +81,12 @@ class User extends Authenticatable
         return $this->rol === self::ROL_CLIENTE;
     }
 
-    public function isEmpleado(): bool
+    /**
+     * Check if user has a custom role (not propietario or cliente)
+     */
+    public function hasCustomRole(): bool
     {
-        return $this->rol === self::ROL_EMPLEADO;
+        return !in_array($this->rol, [self::ROL_PROPIETARIO, self::ROL_CLIENTE]);
     }
 
     protected $appends = ['name'];

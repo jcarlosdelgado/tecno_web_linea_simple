@@ -196,11 +196,23 @@
             background-color: #fee2e2;
             color: #991b1b;
         }
+        
+        .watermark {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-45deg);
+            font-size: 80px;
+            color: rgba(37, 99, 235, 0.05);
+            font-weight: bold;
+            z-index: -1;
+        }
     </style>
 </head>
 <body>
+    <div class="watermark">LINEA SIMPLE</div>
     <div class="header">
-        <h1>TecnoWeb</h1>
+        <h1>Línea Simple</h1>
         <p>Cotización de Servicio</p>
     </div>
 
@@ -322,7 +334,7 @@
     @endif
 
     <div class="footer">
-        <p>TecnoWeb - Sistema de Gestión de Trabajos</p>
+        <p>Línea Simple - Sistema de Gestión de Trabajos</p>
         <p>Documento generado el {{ now()->format('d/m/Y H:i') }}</p>
         <p>Este presupuesto es válido por 30 días desde la fecha de emisión</p>
     </div>

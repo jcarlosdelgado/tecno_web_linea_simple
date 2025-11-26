@@ -187,11 +187,11 @@
     </style>
 </head>
 <body>
-    <div class="watermark">TECNO WEB</div>
+    <div class="watermark">LINEA SIMPLE</div>
 
     <div class="header">
         <h1>COMPROBANTE DE PAGO</h1>
-        <div class="subtitle">TecnoWEB 2025 - Sistema de Gestión de Trabajos</div>
+        <div class="subtitle">Línea Simple - Sistema de Gestión de Trabajos</div>
     </div>
 
     <!-- Información del Comprobante -->
@@ -339,13 +339,13 @@
         </div>
         <div class="signature-box">
             <div class="signature-line">Firma Autorizada</div>
-            <div>TecnoWEB 2025</div>
+            <div>Línea Simple</div>
         </div>
     </div>
 
     <!-- Footer -->
     <div class="footer">
-        <p><strong>TecnoWEB 2025</strong> - Sistema de Gestión de Trabajos de Construcción</p>
+        <p><strong>Línea Simple</strong> - Sistema de Gestión de Trabajos de Construcción</p>
         <p>Este es un comprobante válido generado electrónicamente el {{ now()->format('d/m/Y \a \l\a\s H:i') }}</p>
         <p>Para cualquier consulta, contáctenos a través de nuestros canales oficiales.</p>
     </div>

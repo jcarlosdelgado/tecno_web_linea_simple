@@ -26,7 +26,6 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'propietario' => \App\Http\Middleware\EnsureUserIsPropietario::class,
             'cliente' => \App\Http\Middleware\EnsureUserIsCliente::class,
-            'trabajador' => \App\Http\Middleware\TrabajadorMiddleware::class,
         ]);
 
         $middleware->redirectTo(
@@ -34,8 +33,6 @@ return Application::configure(basePath: dirname(__DIR__))
             users: function ($request) {
                 if ($request->user()->isPropietario()) {
                     return '/admin/dashboard';
-                } elseif ($request->user()->isTrabajador()) {
-                    return '/trabajador/dashboard';
                 }
                 return '/dashboard';
             }
