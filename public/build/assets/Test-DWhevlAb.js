@@ -1,0 +1,1 @@
+import{a,b as s,d as e,u as n,h as o,F as r,o as l}from"./app-BlCBzDlk.js";const d={__name:"Test",setup(c){return(u,t)=>(l(),a(r,null,[s(n(o),{title:"Test Page"}),t[0]||(t[0]=e("div",{class:"p-12"},[e("h1",{class:"text-3xl font-bold"},"Test Page"),e("p",null,"If you can see this, the Inertia app is mounting correctly.")],-1))],64))}};export{d as default};
