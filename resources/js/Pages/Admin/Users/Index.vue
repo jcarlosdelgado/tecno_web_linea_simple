@@ -110,14 +110,17 @@
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap">
                                         <div class="flex flex-col gap-1">
-                                            <span v-if="usuario.rol === 'EMPLEADO' && usuario.role_custom" class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-indigo-100 text-indigo-800">
-                                                Empleado: {{ usuario.role_custom.nombre }}
+                                            <span v-if="usuario.role_custom || usuario.roleCustom" class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-indigo-100 text-indigo-800">
+                                                {{ (usuario.role_custom || usuario.roleCustom).nombre }}
                                             </span>
                                             <span v-else-if="usuario.rol === 'CLIENTE'" class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
                                                 Cliente
                                             </span>
+                                            <span v-else-if="usuario.rol === 'PROPIETARIO'" class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-purple-100 text-purple-800">
+                                                Propietario
+                                            </span>
                                             <span v-else class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800">
-                                                {{ usuario.rol }}
+                                                Sin rol
                                             </span>
                                         </div>
                                     </td>

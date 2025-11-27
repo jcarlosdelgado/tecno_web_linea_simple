@@ -8,6 +8,7 @@ class GastoOperativo extends Model
 {
     protected $table = 'gastos_operativos';
     protected $primaryKey = 'id_gasto_operativo';
+    public $incrementing = true;
 
     protected $fillable = [
         'categoria',
@@ -22,6 +23,14 @@ class GastoOperativo extends Model
         'fecha' => 'date',
         'monto' => 'decimal:2',
     ];
+
+    /**
+     * Get the route key for the model.
+     */
+    public function getRouteKeyName()
+    {
+        return 'id_gasto_operativo';
+    }
 
     /**
      * Relación con el usuario que registró el gasto

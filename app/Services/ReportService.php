@@ -217,8 +217,14 @@ class ReportService
             }
         }
 
-        // Convert to collection and paginate
+        // Convert to collection and paginate (or return all if $perPage is null)
         $collection = collect($clientsWithDebt);
+        
+        if ($perPage === null) {
+            // Return all data for PDF export
+            return $collection;
+        }
+        
         $currentPage = request()->get('page', 1);
         $items = $collection->forPage($currentPage, $perPage);
         
@@ -276,6 +282,11 @@ class ReportService
         // Calculate global totals
         $globalTotalQuantity = $mapped->sum('total_consumed');
         $globalTotalValue = $mapped->sum('total_value');
+
+        // Return all data if $perPage is null (for PDF export)
+        if ($perPage === null) {
+            return $mapped;
+        }
 
         // Convert to collection and paginate
         $currentPage = request()->get('page', 1);

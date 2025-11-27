@@ -6,7 +6,13 @@ import axios from 'axios';
 const props = defineProps({
     pago: Object,
     qrData: Object, // { qr_base64, transaction_id, expiration_date, checkout_url, etc }
+    auth: Object, // User info to determine role
 });
+
+// Function to go back to the previous page
+const goBack = () => {
+    window.history.back();
+};
 
 const loading = ref(false);
 const paymentStatus = ref('PENDIENTE');
@@ -192,12 +198,13 @@ const isPaid = computed(() => paymentStatus.value === 'PAGADO');
                     Ver Plan de Cuotas
                 </Link>
                 
-                <Link 
-                    :href="route('trabajos.show', pago.id_trabajo)" 
+                <button
+                    @click="goBack"
+                    type="button"
                     class="w-full flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none transition-colors"
                 >
-                    {{ isPaid ? 'Ver Trabajo' : 'Cancelar' }}
-                </Link>
+                    {{ isPaid ? 'Volver' : 'Cancelar' }}
+                </button>
             </div>
             
             <div class="mt-4 text-center">

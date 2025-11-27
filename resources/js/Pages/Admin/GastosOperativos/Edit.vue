@@ -35,8 +35,11 @@ const handleFileChange = (event) => {
 };
 
 const submit = () => {
-    form.post(route('admin.gastos-operativos.update', props.gasto.id_gasto_operativo), {
+    form.transform((data) => ({
+        ...data,
         _method: 'PUT',
+    })).post(route('admin.gastos-operativos.update', props.gasto.id_gasto_operativo), {
+        forceFormData: true,
     });
 };
 

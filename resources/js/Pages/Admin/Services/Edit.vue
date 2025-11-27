@@ -35,9 +35,11 @@ const handleImageChange = (event) => {
 };
 
 const submit = () => {
-    form.post(route('admin.servicios.update', props.servicio.id_servicio), {
-        forceFormData: true,
+    form.transform((data) => ({
+        ...data,
         _method: 'PUT',
+    })).post(route('admin.servicios.update', props.servicio.id_servicio), {
+        forceFormData: true,
     });
 };
 </script>

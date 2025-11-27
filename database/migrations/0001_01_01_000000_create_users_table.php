@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('password');
             $table->string('telefono', 50)->nullable();
             $table->string('direccion', 255)->nullable();
-            $table->enum('rol', ['PROPIETARIO', 'CLIENTE']);
+            $table->enum('rol', ['PROPIETARIO', 'CLIENTE'])->nullable();
             $table->rememberToken();
             $table->dateTime('creado_en')->useCurrent();
             $table->dateTime('actualizado_en')->useCurrent()->useCurrentOnUpdate();

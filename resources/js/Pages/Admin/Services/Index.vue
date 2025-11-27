@@ -1,6 +1,6 @@
 <script setup>
 import { ref } from 'vue';
-import { Head, Link } from '@inertiajs/vue3';
+import { Head, Link, router } from '@inertiajs/vue3';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import Card from '@/Components/UI/Card.vue';
 import Button from '@/Components/UI/Button.vue';
@@ -17,8 +17,7 @@ const getImageUrl = (imagen) => {
 
 const confirmDelete = (servicioId) => {
     if (confirm('¿Estás seguro de eliminar este servicio?')) {
-        // Form submit will be handled by Inertia
-        document.getElementById(`delete-form-${servicioId}`).submit();
+        router.delete(route('admin.servicios.destroy', servicioId));
     }
 };
 </script>
@@ -107,27 +106,17 @@ const confirmDelete = (servicioId) => {
                                     </Button>
                                 </Link>
                                 
-                                <form 
-                                    :id="`delete-form-${servicio.id_servicio}`"
-                                    :action="route('admin.servicios.destroy', servicio.id_servicio)" 
-                                    method="POST"
+                                <Button 
+                                    variant="danger" 
+                                    size="sm" 
                                     class="flex-1"
+                                    @click="confirmDelete(servicio.id_servicio)"
                                 >
-                                    <input type="hidden" name="_token" :value="$page.props.csrf_token">
-                                    <input type="hidden" name="_method" value="DELETE">
-                                    <Button 
-                                        type="button"
-                                        variant="danger" 
-                                        size="sm" 
-                                        class="w-full"
-                                        @click="confirmDelete(servicio.id_servicio)"
-                                    >
-                                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                                        </svg>
-                                        Eliminar
-                                    </Button>
-                                </form>
+                                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                    </svg>
+                                    Eliminar
+                                </Button>
                             </div>
                         </div>
                     </Card>

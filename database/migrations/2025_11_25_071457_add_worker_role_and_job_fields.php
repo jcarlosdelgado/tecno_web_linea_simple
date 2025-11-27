@@ -12,9 +12,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        // 1. Modificar el CHECK constraint de rol en usuarios para incluir TRABAJADOR
+        // 1. Modificar el CHECK constraint de rol en usuarios para incluir NULL (roles personalizados)
         DB::statement("ALTER TABLE usuarios DROP CONSTRAINT IF EXISTS usuarios_rol_check");
-        DB::statement("ALTER TABLE usuarios ADD CONSTRAINT usuarios_rol_check CHECK (rol IN ('PROPIETARIO', 'CLIENTE', 'TRABAJADOR'))");
+        DB::statement("ALTER TABLE usuarios ADD CONSTRAINT usuarios_rol_check CHECK (rol IN ('PROPIETARIO', 'CLIENTE') OR rol IS NULL)");
 
         // 2. Agregar nuevos campos a la tabla trabajos
         Schema::table('trabajos', function (Blueprint $table) {

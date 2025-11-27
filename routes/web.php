@@ -135,7 +135,9 @@ Route::middleware(['auth', 'verified', 'propietario'])->prefix('admin')->name('a
     Route::delete('/servicios/{servicio}', [ServicioController::class, 'destroy'])->name('servicios.destroy');
     
     // Gastos Operativos routes
-    Route::resource('gastos-operativos', \App\Http\Controllers\GastoOperativoController::class)->names('gastos-operativos');
+    Route::resource('gastos-operativos', \App\Http\Controllers\GastoOperativoController::class)
+        ->names('gastos-operativos')
+        ->parameters(['gastos-operativos' => 'gastoOperativo']);
     Route::get('/gastos-operativos/reporte/categoria', [\App\Http\Controllers\GastoOperativoController::class, 'reportePorCategoria'])->name('gastos-operativos.reporte-categoria');
     
     // Report routes
@@ -145,6 +147,11 @@ Route::middleware(['auth', 'verified', 'propietario'])->prefix('admin')->name('a
         Route::get('/rentabilidad', [\App\Http\Controllers\ReportController::class, 'jobsProfitability'])->name('rentabilidad');
         Route::get('/clientes', [\App\Http\Controllers\ReportController::class, 'clientsWithDebt'])->name('clientes');
         Route::get('/inventario', [\App\Http\Controllers\ReportController::class, 'inventoryConsumption'])->name('inventario');
+        
+        // PDF Exports
+        Route::get('/clientes/pdf', [\App\Http\Controllers\ReportController::class, 'exportClientsPdf'])->name('clientes.pdf');
+        Route::get('/inventario/pdf', [\App\Http\Controllers\ReportController::class, 'exportInventoryPdf'])->name('inventario.pdf');
+        Route::get('/rentabilidad/pdf', [\App\Http\Controllers\ReportController::class, 'exportProfitabilityPdf'])->name('rentabilidad.pdf');
     });
 });
 

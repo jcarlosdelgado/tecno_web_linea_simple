@@ -116,5 +116,24 @@ class RolesEjemploSeeder extends Seeder
         ])->pluck('id_permiso');
         
         $almacenero->permisos()->attach($permisosAlmacenero);
+
+        // 6. Empleado General - Permisos básicos para cualquier empleado
+        $empleado = Role::create([
+            'nombre' => 'Empleado',
+            'descripcion' => 'Rol básico para empleados con permisos de visualización general',
+            'activo' => true,
+        ]);
+        
+        $permisosEmpleado = Permiso::whereIn('nombre', [
+            'ver_trabajos',
+            'ver_presupuestos',
+            'ver_servicios',
+            'ver_materiales',
+            'ver_inventario',
+            'ver_seguimiento',
+            'ver_pagos',
+        ])->pluck('id_permiso');
+        
+        $empleado->permisos()->attach($permisosEmpleado);
     }
 }

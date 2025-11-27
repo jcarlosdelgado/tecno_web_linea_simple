@@ -33,7 +33,11 @@ class UserManagementController extends Controller
         }
 
         // Exclude PROPIETARIO from list
-        $query->whereIn('rol', ['CLIENTE', 'EMPLEADO']);
+        // Incluye CLIENTE, usuarios con roles personalizados (rol = NULL) y EMPLEADO (por compatibilidad)
+        $query->where(function($q) {
+            $q->where('rol', 'CLIENTE')
+              ->orWhereNull('rol');
+        });
 
         $usuarios = $query->orderBy('creado_en', 'desc')->paginate(15);
 
@@ -75,7 +79,7 @@ class UserManagementController extends Controller
         ]);
 
         $validated['password'] = Hash::make($validated['password']);
-        $validated['rol'] = 'EMPLEADO'; // Los usuarios creados por admin son empleados
+        // No asignamos el campo 'rol' - queda NULL para usuarios con roles personalizados
 
         $user = User::create($validated);
 

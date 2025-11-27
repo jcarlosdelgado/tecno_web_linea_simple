@@ -97,4 +97,77 @@ class ReportController extends Controller
             'endDate' => $endDate,
         ]);
     }
+
+    /**
+     * Export clients with debt report to PDF
+     */
+    public function exportClientsPdf()
+    {
+        $clients = $this->reportService->getClientsWithDebt(null); // Get all without pagination
+        
+        // Calculate totals
+        $totalDebt = is_array($clients) ? collect($clients)->sum('total_debt') : $clients->sum('total_debt');
+
+        $pdf = \PDF::loadView('pdf.reporte-clientes', [
+            'clients' => $clients,
+            'totalDebt' => $totalDebt,
+        ]);
+
+        $fileName = "Reporte-Clientes-Deuda-" . now()->format('Ymd') . ".pdf";
+        return $pdf->download($fileName);
+    }
+
+    /**
+     * Export inventory consumption report to PDF
+     */
+    public function exportInventoryPdf(Request $request)
+    {
+        $startDate = $request->input('start_date');
+        $endDate = $request->input('end_date');
+        
+        $consumption = $this->reportService->getInventoryConsumption($startDate, $endDate, null); // Get all without pagination
+        
+        // Calculate totals
+        $totalQuantity = is_array($consumption) ? collect($consumption)->sum('total_consumed') : $consumption->sum('total_consumed');
+        $totalValue = is_array($consumption) ? collect($consumption)->sum('total_value') : $consumption->sum('total_value');
+
+        $pdf = \PDF::loadView('pdf.reporte-inventario', [
+            'consumption' => $consumption,
+            'totalQuantity' => $totalQuantity,
+            'totalValue' => $totalValue,
+            'startDate' => $startDate,
+            'endDate' => $endDate,
+        ]);
+
+        $fileName = "Reporte-Inventario-" . now()->format('Ymd') . ".pdf";
+        return $pdf->download($fileName);
+    }
+
+    /**
+     * Export profitability report to PDF
+     */
+    public function exportProfitabilityPdf(Request $request)
+    {
+        $startDate = $request->input('start_date');
+        $endDate = $request->input('end_date');
+        
+        $profitability = $this->reportService->getJobsProfitability($startDate, $endDate);
+        
+        // Calculate totals
+        $totalIncome = is_array($profitability) ? collect($profitability)->sum('revenue') : $profitability->sum('revenue');
+        $totalCosts = is_array($profitability) ? collect($profitability)->sum('expenses') : $profitability->sum('expenses');
+        $totalProfit = is_array($profitability) ? collect($profitability)->sum('profit') : $profitability->sum('profit');
+
+        $pdf = \PDF::loadView('pdf.reporte-rentabilidad', [
+            'profitability' => $profitability,
+            'totalIncome' => $totalIncome,
+            'totalCosts' => $totalCosts,
+            'totalProfit' => $totalProfit,
+            'startDate' => $startDate,
+            'endDate' => $endDate,
+        ]);
+
+        $fileName = "Reporte-Rentabilidad-" . now()->format('Ymd') . ".pdf";
+        return $pdf->download($fileName);
+    }
 }
